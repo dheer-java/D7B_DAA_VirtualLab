@@ -1,16 +1,31 @@
-# React + Vite
+# 🚀 Selection Sort Virtual Lab (VLab)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
+![VESIT](https://img.shields.io/badge/Institution-VESIT-blue?style=for-the-badge)
 
-Currently, two official plugins are available:
+An interactive, web-based educational simulator designed to help students visualize, understand, and practice the **Selection Sort** algorithm. Developed as part of the **Design and Analysis of Algorithms (DAA)** Virtual Labs initiative at Vivekanand Education Society's Institute of Technology (VESIT).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 📖 About the Project
+Traditional algorithmic learning often relies on static diagrams. This Virtual Lab bridges the gap by providing a dynamic, visual, and interactive environment. It allows users to see the exact memory states, variable pointers, and swapping mechanisms in real-time.
 
-## React Compiler
+### ✨ Key Features
+* **Dual-Mode Simulator:**
+  * **Auto-Simulation:** Watch the algorithm run automatically with adjustable playback speeds.
+  * **Practice Mode (Manual):** Step through the algorithm yourself. The engine validates your moves in real-time and provides error feedback if you miss a smaller element or make a wrong swap.
+* **Comprehensive Theory Module:** Includes algorithm logic, step-by-step pseudo-code, and complexity analysis ($O(n^2)$ time and $O(1)$ space).
+* **Modern UI/UX:** Built with React.js for seamless Virtual DOM updates, preventing browser lag during heavy algorithmic computations.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Tech Stack
+* **Frontend Framework:** React.js
+* **Build Tool:** Vite
+* **Styling:** CSS3 & Inline Styles
+* **Icons:** Lucide-React
 
-## Expanding the ESLint configuration
+## 💻 How to Run Locally
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+If you want to run this Virtual Lab on your local machine, follow these steps:
+
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/dheer-java/D7B_DAA_VirtualLab.git](https://github.com/dheer-java/D7B_DAA_VirtualLab.git)
