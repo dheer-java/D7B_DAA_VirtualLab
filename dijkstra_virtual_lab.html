@@ -1,0 +1,551 @@
+
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); background: transparent; }
+  #app { width: 100%; min-height: 500px; }
+  .tab-bar { display: flex; gap: 0; border-bottom: 0.5px solid var(--color-border-tertiary); padding: 0 1.5rem; background: var(--color-background-primary); }
+  .tab-btn { padding: 10px 20px; font-size: 14px; font-weight: 400; cursor: pointer; border: none; background: transparent; color: var(--color-text-secondary); border-bottom: 2px solid transparent; margin-bottom: -0.5px; transition: all 0.15s; }
+  .tab-btn.active { color: var(--color-text-primary); border-bottom: 2px solid #178; font-weight: 500; }
+  .tab-btn:hover:not(.active) { color: var(--color-text-primary); background: var(--color-background-secondary); }
+  .full-content { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem; }
+  .sim-layout { display: flex; height: 520px; }
+  .sim-left { width: 33%; background: var(--color-background-secondary); border-right: 0.5px solid var(--color-border-tertiary); padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+  .sim-right { flex: 1; background: var(--color-background-primary); position: relative; }
+  label { font-size: 12px; color: var(--color-text-secondary); display: block; margin-bottom: 4px; }
+  select { width: 100%; font-size: 13px; padding: 6px 8px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-primary); color: var(--color-text-primary); cursor: pointer; }
+  .speed-row { display: flex; align-items: center; gap: 8px; }
+  .speed-row input { flex: 1; }
+  .speed-val { font-size: 12px; color: var(--color-text-secondary); min-width: 42px; }
+  .btn-row { display: flex; gap: 6px; }
+  .btn { flex: 1; padding: 7px 4px; font-size: 12px; font-weight: 500; border-radius: var(--border-radius-md); cursor: pointer; border: 0.5px solid transparent; transition: all 0.12s; }
+  .btn-play { background: #0f766e; color: #fff; border-color: #0f766e; }
+  .btn-play:hover { background: #0d6b64; }
+  .btn-pause { background: #b45309; color: #fff; border-color: #b45309; }
+  .btn-pause:hover { background: #a34608; }
+  .btn-reset { background: #dc2626; color: #fff; border-color: #dc2626; }
+  .btn-reset:hover { background: #c91f1f; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .status-box { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 8px 10px; min-height: 56px; }
+  .status-title { font-size: 11px; color: var(--color-text-tertiary); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .status-msg { font-size: 12px; color: var(--color-text-primary); line-height: 1.5; }
+  .dist-table { width: 100%; font-size: 11px; border-collapse: collapse; }
+  .dist-table th { color: var(--color-text-tertiary); font-weight: 500; text-align: left; padding: 3px 4px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .dist-table td { padding: 3px 4px; color: var(--color-text-primary); border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .dist-inf { color: var(--color-text-tertiary); }
+  .section-title { font-size: 11px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.06em; }
+  .aim-hero { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 2rem; margin-bottom: 2rem; border: 0.5px solid var(--color-border-tertiary); }
+  .aim-hero h2 { font-size: 20px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 0.75rem; }
+  .aim-hero p { font-size: 15px; color: var(--color-text-secondary); line-height: 1.7; }
+  .concept-section { margin-bottom: 2rem; }
+  .concept-section h3 { font-size: 16px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 1rem; border-bottom: 0.5px solid var(--color-border-tertiary); padding-bottom: 0.5rem; }
+  .concept-visuals { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 1rem; }
+  .mini-svg-wrap { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 8px; background: var(--color-background-secondary); }
+  .mini-label { font-size: 11px; color: var(--color-text-tertiary); text-align: center; margin-top: 4px; }
+  .state-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .state-table th { background: var(--color-background-secondary); color: var(--color-text-secondary); font-weight: 500; padding: 7px 10px; border: 0.5px solid var(--color-border-tertiary); text-align: left; }
+  .state-table td { padding: 6px 10px; border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-primary); }
+  .state-table tr:nth-child(even) td { background: var(--color-background-secondary); }
+  .callout { background: #fef3c7; border: 0.5px solid #f59e0b; border-radius: var(--border-radius-md); padding: 12px 14px; margin: 1rem 0; }
+  .callout p { font-size: 13px; color: #78350f; line-height: 1.6; }
+  .callout strong { color: #92400e; }
+  pre { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 1rem; font-family: var(--font-mono); font-size: 12px; color: var(--color-text-primary); line-height: 1.7; overflow-x: auto; }
+  .complexity-row { display: flex; gap: 12px; margin-top: 0.5rem; }
+  .complexity-badge { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 8px 12px; font-size: 12px; }
+  .complexity-badge strong { font-size: 11px; display: block; color: var(--color-text-tertiary); margin-bottom: 2px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+  .complexity-badge code { font-family: var(--font-mono); font-size: 13px; color: var(--color-text-primary); }
+  ol.apps-list { padding-left: 1.2rem; }
+  ol.apps-list li { font-size: 14px; color: var(--color-text-primary); padding: 4px 0; line-height: 1.6; }
+  ol.apps-list li strong { font-weight: 500; }
+  .legend { position: absolute; bottom: 10px; left: 10px; background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 8px 10px; display: flex; flex-direction: column; gap: 5px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--color-text-secondary); }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .progress-bar { height: 3px; background: var(--color-background-secondary); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: #0d9488; transition: width 0.2s; }
+</style>
+
+<div id="app">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('aim')">Aim</button>
+    <button class="tab-btn" onclick="switchTab('concept')">Concept</button>
+    <button class="tab-btn" onclick="switchTab('simulation')">Simulation</button>
+  </div>
+  <div id="tab-aim">
+    <div class="full-content">
+      <div class="aim-hero">
+        <h2>Objective</h2>
+        <p>To understand and visualize how Dijkstra's Algorithm finds the shortest path from a single source node to all other nodes in a weighted graph with non-negative edge weights.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.5rem;">
+        <div style="background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem;">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--color-text-tertiary);margin-bottom:6px;">What you'll learn</div>
+          <ul style="padding-left:1.1rem;font-size:13px;color:var(--color-text-primary);line-height:2;">
+            <li>How greedy selection works in shortest-path algorithms</li>
+            <li>Priority queue-based relaxation of edges</li>
+            <li>Why negative edge weights break the algorithm</li>
+            <li>Real-world applications: GPS, OSPF routing, and more</li>
+          </ul>
+        </div>
+        <div style="background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem;">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--color-text-tertiary);margin-bottom:6px;">Prerequisites</div>
+          <ul style="padding-left:1.1rem;font-size:13px;color:var(--color-text-primary);line-height:2;">
+            <li>Basic graph theory (nodes, edges, weights)</li>
+            <li>Priority queues / min-heaps</li>
+            <li>Greedy algorithm paradigm</li>
+            <li>Big-O complexity analysis</li>
+          </ul>
+        </div>
+      </div>
+      <div style="background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem;">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--color-text-tertiary);margin-bottom:8px;">Algorithm at a glance</div>
+        <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.7;">Dijkstra's Algorithm, proposed by Edsger W. Dijkstra in 1956, is a single-source shortest path algorithm. It works by iteratively picking the unvisited node with the smallest tentative distance, then relaxing (updating) the distances of all its neighbors. This greedy strategy guarantees correctness on graphs with non-negative weights.</p>
+      </div>
+    </div>
+  </div>
+  <div id="tab-concept" style="display:none;">
+    <div class="full-content">
+      <div class="concept-section">
+        <h3>Step-by-step visual trace</h3>
+        <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:1rem;line-height:1.7;">The following 6 diagrams trace Dijkstra's algorithm on a 5-node graph (s, t, x, y, z) starting from node <strong>s</strong>. Teal = visited, orange = currently evaluating, blue = unvisited, red = active edge being relaxed.</p>
+        <div class="concept-visuals" id="concept-visuals"></div>
+      </div>
+      <div class="concept-section">
+        <h3>State tracking table</h3>
+        <div style="overflow-x:auto;">
+          <table class="state-table">
+            <thead>
+              <tr>
+                <th>Step</th><th>start N</th><th>D(t), p(t)</th><th>D(x), p(x)</th><th>D(y), p(y)</th><th>D(z), p(z)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>0 – Init</td><td>s</td><td>∞, –</td><td>∞, –</td><td>∞, –</td><td>∞, –</td></tr>
+              <tr><td>1 – Visit s</td><td>s</td><td>10, s</td><td>∞, –</td><td>5, s</td><td>∞, –</td></tr>
+              <tr><td>2 – Visit y</td><td>y</td><td>8, y</td><td>14, y</td><td>–</td><td>7, y</td></tr>
+              <tr><td>3 – Visit z</td><td>z</td><td>8, y</td><td>13, z</td><td>–</td><td>–</td></tr>
+              <tr><td>4 – Visit t</td><td>t</td><td>–</td><td>9, t</td><td>–</td><td>–</td></tr>
+              <tr><td>5 – Visit x</td><td>x</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:11px;color:var(--color-text-tertiary);margin-top:6px;">Final shortest distances from s: t=8, x=9, y=5, z=7. "–" in a distance cell means node already finalized.</p>
+      </div>
+      <div class="concept-section">
+        <h3>Why negative weights break Dijkstra</h3>
+        <div class="callout">
+          <p><strong>Important:</strong> Dijkstra's algorithm assumes that once a node is marked visited, its shortest distance is final. A negative-weight edge can invalidate this assumption — a later path through a negative edge might yield a shorter distance to an already-finalized node. Use <strong>Bellman-Ford</strong> for graphs with negative weights (but no negative cycles).</p>
+        </div>
+      </div>
+      <div class="concept-section">
+        <h3>Pseudocode</h3>
+        <pre>DIJKSTRA(G, w, s):
+  for each vertex v in G.V:
+    v.d = ∞
+    v.parent = NIL
+  s.d = 0
+  Q = min-priority queue of all vertices keyed by .d
+  while Q ≠ ∅:
+    u = EXTRACT-MIN(Q)
+    for each vertex v in G.Adj[u]:
+      if v.d > u.d + w(u, v):
+        v.d = u.d + w(u, v)
+        v.parent = u
+        DECREASE-KEY(Q, v, v.d)</pre>
+      </div>
+      <div class="concept-section">
+        <h3>Complexity analysis</h3>
+        <div class="complexity-row">
+          <div class="complexity-badge"><strong>Time (array)</strong><code>O(V²)</code></div>
+          <div class="complexity-badge"><strong>Time (min-heap)</strong><code>O((V + E) log V)</code></div>
+          <div class="complexity-badge"><strong>Space</strong><code>O(V + E)</code></div>
+        </div>
+      </div>
+      <div class="concept-section">
+        <h3>Applications</h3>
+        <ol class="apps-list">
+          <li><strong>Digital mapping (GPS)</strong> — finding the fastest route between two geographic locations</li>
+          <li><strong>IP routing protocols (OSPF)</strong> — routers use shortest-path trees to forward packets efficiently</li>
+          <li><strong>Robotic path planning</strong> — autonomous robots navigate obstacle maps using weighted graphs</li>
+          <li><strong>Telecommunication networks</strong> — minimizing latency or bandwidth cost across network topologies</li>
+          <li><strong>Social networks</strong> — computing degrees of separation and influence propagation paths</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <div id="tab-simulation" style="display:none;">
+    <div class="sim-layout">
+      <div class="sim-left">
+        <div>
+          <label>Graph example</label>
+          <select id="graph-select" onchange="onGraphChange()">
+            <option value="0">Example 1 — Basic graph (5 nodes)</option>
+            <option value="1">Example 2 — Multiple paths (6 nodes)</option>
+            <option value="2">Example 3 — Complex network (8 nodes)</option>
+          </select>
+        </div>
+        <div>
+          <label>Animation speed</label>
+          <div class="speed-row">
+            <input type="range" id="speed-slider" min="100" max="2000" step="100" value="800" oninput="onSpeedChange()">
+            <span class="speed-val" id="speed-val">800ms</span>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-play" id="btn-play" onclick="onPlay()">▶ Play</button>
+          <button class="btn btn-pause" id="btn-pause" onclick="onPause()" disabled>⏸ Pause</button>
+          <button class="btn btn-reset" onclick="onReset()">↺ Reset</button>
+        </div>
+        <div>
+          <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+          <div style="display:flex;justify-content:space-between;margin-top:3px;">
+            <span style="font-size:11px;color:var(--color-text-tertiary)" id="frame-counter">Step 0 / 0</span>
+            <span style="font-size:11px;color:var(--color-text-tertiary)" id="frame-state">Ready</span>
+          </div>
+        </div>
+        <div class="status-box">
+          <div class="status-title">Status</div>
+          <div class="status-msg" id="status-msg">Select a graph and press Play to begin.</div>
+        </div>
+        <div>
+          <div class="section-title" style="margin-bottom:6px;">Current distances</div>
+          <table class="dist-table">
+            <thead><tr><th>Node</th><th>Distance</th><th>Via</th></tr></thead>
+            <tbody id="dist-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="sim-right">
+        <svg id="sim-svg" width="100%" height="100%" style="display:block;"></svg>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#6b7280;border:2px solid #9ca3af"></div>Unvisited</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#0d9488"></div>Visited</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>Evaluating</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#2563eb"></div>Shortest path</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const GRAPHS = [
+  {
+    name: "Basic",
+    nodes: [
+      {id:"A",x:120,y:80,label:"A"},
+      {id:"B",x:300,y:60,label:"B"},
+      {id:"C",x:460,y:140,label:"C"},
+      {id:"D",x:200,y:220,label:"D"},
+      {id:"E",x:380,y:280,label:"E"}
+    ],
+    edges: [
+      {u:"A",v:"B",w:4},{u:"A",v:"D",w:2},
+      {u:"B",v:"C",w:5},{u:"B",v:"D",w:1},{u:"B",v:"E",w:6},
+      {u:"C",v:"E",w:3},
+      {u:"D",v:"E",w:8}
+    ],
+    source:"A"
+  },
+  {
+    name:"Multiple Paths",
+    nodes:[
+      {id:"S",x:80,y:160,label:"S"},
+      {id:"A",x:230,y:60,label:"A"},
+      {id:"B",x:230,y:260,label:"B"},
+      {id:"C",x:390,y:60,label:"C"},
+      {id:"D",x:390,y:260,label:"D"},
+      {id:"T",x:530,y:160,label:"T"}
+    ],
+    edges:[
+      {u:"S",v:"A",w:3},{u:"S",v:"B",w:7},
+      {u:"A",v:"C",w:2},{u:"A",v:"B",w:2},
+      {u:"B",v:"D",w:3},
+      {u:"C",v:"T",w:4},{u:"C",v:"D",w:1},
+      {u:"D",v:"T",w:2}
+    ],
+    source:"S"
+  },
+  {
+    name:"Complex Network",
+    nodes:[
+      {id:"A",x:100,y:150,label:"A"},
+      {id:"B",x:240,y:60,label:"B"},
+      {id:"C",x:380,y:60,label:"C"},
+      {id:"D",x:500,y:150,label:"D"},
+      {id:"E",x:380,y:250,label:"E"},
+      {id:"F",x:240,y:250,label:"F"},
+      {id:"G",x:160,y:330,label:"G"},
+      {id:"H",x:430,y:340,label:"H"}
+    ],
+    edges:[
+      {u:"A",v:"B",w:4},{u:"A",v:"F",w:3},
+      {u:"B",v:"C",w:2},{u:"B",v:"F",w:5},
+      {u:"C",v:"D",w:3},{u:"C",v:"E",w:6},
+      {u:"D",v:"H",w:4},
+      {u:"E",v:"D",w:1},{u:"E",v:"H",w:2},{u:"E",v:"F",w:7},
+      {u:"F",v:"G",w:5},
+      {u:"G",v:"H",w:9},{u:"G",v:"A",w:8}
+    ],
+    source:"A"
+  }
+];
+
+function buildAdj(graph) {
+  const adj = {};
+  graph.nodes.forEach(n => adj[n.id] = []);
+  graph.edges.forEach(e => {
+    adj[e.u].push({node:e.v, w:e.w});
+    adj[e.v].push({node:e.u, w:e.w});
+  });
+  return adj;
+}
+
+function generateFrames(graph) {
+  const adj = buildAdj(graph);
+  const nodes = graph.nodes.map(n => n.id);
+  const dist = {}, prev = {}, visited = new Set();
+  nodes.forEach(n => { dist[n] = Infinity; prev[n] = null; });
+  dist[graph.source] = 0;
+  const frames = [];
+  const pushFrame = (visitedArr, activeEdges, spEdges, msg) => {
+    frames.push({
+      visitedNodes: [...visitedArr],
+      activeEdges: [...activeEdges],
+      shortestPathEdges: [...spEdges],
+      distances: {...dist},
+      prev: {...prev},
+      statusMessage: msg
+    });
+  };
+  const getSpEdges = () => {
+    const res = [];
+    nodes.forEach(n => { if(prev[n]) res.push({u:prev[n],v:n}); });
+    return res;
+  };
+  pushFrame([], [], [], `Initialized. Source: ${graph.source}, all distances = ∞ except d(${graph.source})=0.`);
+  while(true) {
+    let u = null, best = Infinity;
+    nodes.forEach(n => { if(!visited.has(n) && dist[n] < best){ best=dist[n]; u=n; }});
+    if(u === null) break;
+    visited.add(u);
+    pushFrame([...visited], [], getSpEdges(), `Visiting node ${u} (distance = ${dist[u]}). Exploring its neighbors.`);
+    for(const {node:v, w} of adj[u]) {
+      if(visited.has(v)) continue;
+      const activeEdge = [{u,v}];
+      pushFrame([...visited], activeEdge, getSpEdges(), `Checking edge ${u}→${v} (weight ${w}). Current d(${v})=${dist[v] === Infinity ? '∞' : dist[v]}, new candidate = ${dist[u]}+${w}=${dist[u]+w}.`);
+      if(dist[u] + w < dist[v]) {
+        dist[v] = dist[u] + w;
+        prev[v] = u;
+        pushFrame([...visited], activeEdge, getSpEdges(), `Relaxed! Updated d(${v}) = ${dist[v]}, via ${u}.`);
+      } else {
+        pushFrame([...visited], activeEdge, getSpEdges(), `No improvement for ${v}. Keeping d(${v})=${dist[v] === Infinity ? '∞' : dist[v]}.`);
+      }
+    }
+  }
+  pushFrame([...visited], [], getSpEdges(), `Algorithm complete. All reachable nodes finalized.`);
+  return frames;
+}
+
+let currentGraphIdx = 0;
+let frames = [];
+let frameIdx = 0;
+let intervalId = null;
+let speed = 800;
+let isPlaying = false;
+
+function getGraph() { return GRAPHS[currentGraphIdx]; }
+
+function onGraphChange() {
+  currentGraphIdx = parseInt(document.getElementById('graph-select').value);
+  onReset();
+}
+function onSpeedChange() {
+  speed = parseInt(document.getElementById('speed-slider').value);
+  document.getElementById('speed-val').textContent = speed + 'ms';
+  if(isPlaying) { clearInterval(intervalId); startInterval(); }
+}
+function startInterval() {
+  intervalId = setInterval(() => {
+    if(frameIdx < frames.length - 1) {
+      frameIdx++;
+      renderFrame();
+    } else {
+      clearInterval(intervalId);
+      isPlaying = false;
+      document.getElementById('btn-play').disabled = false;
+      document.getElementById('btn-pause').disabled = true;
+      document.getElementById('frame-state').textContent = 'Done';
+    }
+  }, speed);
+}
+function onPlay() {
+  if(frames.length === 0) frames = generateFrames(getGraph());
+  if(frameIdx >= frames.length - 1) { frameIdx = 0; }
+  isPlaying = true;
+  document.getElementById('btn-play').disabled = true;
+  document.getElementById('btn-pause').disabled = false;
+  renderFrame();
+  startInterval();
+}
+function onPause() {
+  clearInterval(intervalId);
+  isPlaying = false;
+  document.getElementById('btn-play').disabled = false;
+  document.getElementById('btn-pause').disabled = true;
+  document.getElementById('frame-state').textContent = 'Paused';
+}
+function onReset() {
+  clearInterval(intervalId);
+  isPlaying = false;
+  frames = generateFrames(getGraph());
+  frameIdx = 0;
+  document.getElementById('btn-play').disabled = false;
+  document.getElementById('btn-pause').disabled = true;
+  document.getElementById('frame-state').textContent = 'Ready';
+  renderFrame();
+}
+
+function edgeKey(u,v) { return [u,v].sort().join('-'); }
+
+function renderFrame() {
+  if(frames.length === 0) return;
+  const f = frames[Math.min(frameIdx, frames.length-1)];
+  const graph = getGraph();
+  document.getElementById('status-msg').textContent = f.statusMessage;
+  document.getElementById('frame-counter').textContent = `Step ${frameIdx} / ${frames.length-1}`;
+  const pct = frames.length > 1 ? (frameIdx / (frames.length-1)) * 100 : 0;
+  document.getElementById('progress-fill').style.width = pct.toFixed(1) + '%';
+  if(!isPlaying) document.getElementById('frame-state').textContent = `Step ${frameIdx}`;
+
+  const visitedSet = new Set(f.visitedNodes);
+  const activeSet = new Set(f.activeEdges.map(e => edgeKey(e.u,e.v)));
+  const spSet = new Set(f.shortestPathEdges.map(e => edgeKey(e.u,e.v)));
+
+  const tbody = document.getElementById('dist-tbody');
+  tbody.innerHTML = '';
+  graph.nodes.forEach(n => {
+    const d = f.distances[n.id];
+    const p = f.prev ? f.prev[n.id] : null;
+    const tr = document.createElement('tr');
+    const isActive = f.activeEdges.some(e => e.v === n.id || e.u === n.id);
+    if(visitedSet.has(n.id)) tr.style.background = 'rgba(13,148,136,0.08)';
+    tr.innerHTML = `<td>${n.id}</td><td>${d === Infinity ? '∞' : d}</td><td class="${!p?'dist-inf':''}">${p || '–'}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  const svg = document.getElementById('sim-svg');
+  const W = svg.clientWidth || 600;
+  const H = svg.clientHeight || 500;
+  const gW = 580, gH = 360;
+  const offX = (W - gW) / 2, offY = (H - gH) / 2 - 20;
+
+  let html = `<defs><marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#9ca3af"/></marker></defs>`;
+
+  graph.edges.forEach(e => {
+    const nu = graph.nodes.find(n => n.id === e.u);
+    const nv = graph.nodes.find(n => n.id === e.v);
+    const x1 = offX + nu.x, y1 = offY + nu.y;
+    const x2 = offX + nv.x, y2 = offY + nv.y;
+    const key = edgeKey(e.u, e.v);
+    let stroke = '#d1d5db', sw = 1.5;
+    if(spSet.has(key)) { stroke = '#2563eb'; sw = 3; }
+    if(activeSet.has(key)) { stroke = '#f59e0b'; sw = 2.5; }
+    const mx = (x1+x2)/2, my = (y1+y2)/2;
+    html += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${stroke}" stroke-width="${sw}" stroke-linecap="round"/>`;
+    html += `<rect x="${mx-9}" y="${my-9}" width="18" height="14" rx="3" fill="white" fill-opacity="0.92"/>`;
+    html += `<text x="${mx}" y="${my+1}" text-anchor="middle" dominant-baseline="middle" font-size="11" font-family="var(--font-mono)" fill="#1F2937" font-weight="500">${e.w}</text>`;
+  });
+
+  graph.nodes.forEach(n => {
+    const x = offX + n.x, y = offY + n.y;
+    let fill = '#e5e7eb', stroke = '#9ca3af', textFill = '#374151';
+    if(visitedSet.has(n.id)) { fill = '#0d9488'; stroke = '#0f766e'; textFill = '#fff'; }
+    if(f.activeEdges.some(e => e.v === n.id)) { fill = '#f59e0b'; stroke = '#d97706'; textFill = '#fff'; }
+    if(n.id === graph.source && visitedSet.has(n.id)) { stroke = '#065f46'; }
+    const d = f.distances[n.id];
+    const dLabel = d === Infinity ? '∞' : String(d);
+    html += `<circle cx="${x}" cy="${y}" r="22" fill="${fill}" stroke="${stroke}" stroke-width="2"/>`;
+    html += `<text x="${x}" y="${y+1}" text-anchor="middle" dominant-baseline="middle" font-size="13" font-weight="500" font-family="var(--font-sans)" fill="${textFill}">${n.label}</text>`;
+    html += `<rect x="${x-12}" y="${y+24}" width="24" height="14" rx="3" fill="white" fill-opacity="0.85"/>`;
+    html += `<text x="${x}" y="${y+31}" text-anchor="middle" font-size="10" font-family="var(--font-mono)" fill="#1e40af">${dLabel}</text>`;
+  });
+
+  svg.innerHTML = html;
+}
+
+function switchTab(tab) {
+  ['aim','concept','simulation'].forEach(t => {
+    document.getElementById('tab-'+t).style.display = t === tab ? 'block' : 'none';
+    document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+      const tabs = ['aim','concept','simulation'];
+      btn.classList.toggle('active', tabs[i] === tab);
+    });
+  });
+  if(tab === 'simulation') {
+    if(frames.length === 0) {
+      frames = generateFrames(getGraph());
+      renderFrame();
+    }
+  }
+  if(tab === 'concept') buildConceptVisuals();
+}
+
+function buildConceptVisuals() {
+  const container = document.getElementById('concept-visuals');
+  if(container.children.length > 0) return;
+  const cNodes = [
+    {id:'s',x:30,y:60},{id:'t',x:120,y:20},{id:'x',x:200,y:60},
+    {id:'y',x:120,y:100},{id:'z',x:200,y:130}
+  ];
+  const cEdges = [
+    {u:'s',v:'t',w:10},{u:'s',v:'y',w:5},
+    {u:'t',v:'x',w:1},{u:'t',v:'y',w:2},
+    {u:'x',v:'z',w:4},
+    {u:'y',v:'t',w:3},{u:'y',v:'x',w:9},{u:'y',v:'z',w:2},
+    {u:'z',v:'x',w:6}
+  ];
+  const steps = [
+    {label:'a. Initialize',visited:[],active:[],sp:[],dists:{s:0,t:'∞',x:'∞',y:'∞',z:'∞'}},
+    {label:'b. Visit s',visited:['s'],active:[{u:'s',v:'t'},{u:'s',v:'y'}],sp:[],dists:{s:0,t:10,x:'∞',y:5,z:'∞'}},
+    {label:'c. Visit y',visited:['s','y'],active:[{u:'y',v:'t'},{u:'y',v:'z'}],sp:[{u:'s',v:'y'}],dists:{s:0,t:8,x:'∞',y:5,z:7}},
+    {label:'d. Visit z',visited:['s','y','z'],active:[{u:'z',v:'x'}],sp:[{u:'s',v:'y'},{u:'y',v:'z'}],dists:{s:0,t:8,x:13,y:5,z:7}},
+    {label:'e. Visit t',visited:['s','y','z','t'],active:[{u:'t',v:'x'}],sp:[{u:'s',v:'y'},{u:'y',v:'z'},{u:'y',v:'t'}],dists:{s:0,t:8,x:9,y:5,z:7}},
+    {label:'f. Visit x (done)',visited:['s','y','z','t','x'],active:[],sp:[{u:'s',v:'y'},{u:'y',v:'z'},{u:'y',v:'t'},{u:'t',v:'x'}],dists:{s:0,t:8,x:9,y:5,z:7}}
+  ];
+  const W=240, H=165;
+  steps.forEach(step => {
+    const wrap = document.createElement('div');
+    wrap.className = 'mini-svg-wrap';
+    const visitedSet = new Set(step.visited);
+    const activeSet = new Set(step.active.map(e=>[e.u,e.v].sort().join('-')));
+    const spSet = new Set(step.sp.map(e=>[e.u,e.v].sort().join('-')));
+    let svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">`;
+    cEdges.forEach(e => {
+      const nu=cNodes.find(n=>n.id===e.u), nv=cNodes.find(n=>n.id===e.v);
+      const key=[e.u,e.v].sort().join('-');
+      let sc='#d1d5db', sw=1;
+      if(spSet.has(key)){sc='#2563eb';sw=2;}
+      if(activeSet.has(key)){sc='#f59e0b';sw=1.5;}
+      const mx=(nu.x+nv.x)/2+8, my=(nu.y+nv.y)/2+8;
+      svg+=`<line x1="${nu.x+8}" y1="${nu.y+8}" x2="${nv.x+8}" y2="${nv.y+8}" stroke="${sc}" stroke-width="${sw}"/>`;
+      svg+=`<rect x="${mx-7}" y="${my-7}" width="13" height="11" rx="2" fill="white" fill-opacity="0.9"/>`;
+      svg+=`<text x="${mx}" y="${my+1}" text-anchor="middle" dominant-baseline="middle" font-size="8" fill="#1F2937">${e.w}</text>`;
+    });
+    cNodes.forEach(n => {
+      const x=n.x+8, y=n.y+8;
+      let fill='#e5e7eb', tc='#374151';
+      if(visitedSet.has(n.id)){fill='#0d9488';tc='#fff';}
+      if(step.active.some(e=>e.v===n.id)){fill='#f59e0b';tc='#fff';}
+      const d=step.dists[n.id];
+      svg+=`<circle cx="${x}" cy="${y}" r="14" fill="${fill}" stroke="#9ca3af" stroke-width="1.5"/>`;
+      svg+=`<text x="${x}" y="${y+1}" text-anchor="middle" dominant-baseline="middle" font-size="9" font-weight="500" fill="${tc}">${n.id}</text>`;
+      svg+=`<text x="${x}" y="${y+19}" text-anchor="middle" font-size="8" fill="#2563eb">${d}</text>`;
+    });
+    svg+=`</svg>`;
+    wrap.innerHTML=svg+`<div class="mini-label">${step.label}</div>`;
+    container.appendChild(wrap);
+  });
+}
+
+onReset();
+</script>
