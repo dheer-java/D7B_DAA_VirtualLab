@@ -156,9 +156,12 @@ DECREASE-KEY(Q, v, v.d)
 ---
 
 ## Project Structure
+
+```
 Dijkstra_01_Gayatri_Agarwal/
-├── dijkstra_virtual_lab.html # Main application (HTML/CSS/JS)
-└── README.md # This files
+├── dijkstra_virtual_lab.html   # Main application (HTML/CSS/JS)
+└── README.md                   # This file
+```
 
 ---
 
