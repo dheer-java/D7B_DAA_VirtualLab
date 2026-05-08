@@ -15,7 +15,7 @@ The repository includes implementations and visual simulations for the following
 * **Selection Sort**
 
 ## Repository Structure
-Each folder in this repository represents an individual or group project. The directories are named to indicate the algorithm implemented, along with the respective student's name and roll number (e.g., `[Algorithm]_[Name]_[RollNo]`). 
+Each folder in this repository represents an individual or group project. The directories are named to indicate the algorithm implemented, along with the respective student's name and roll number (e.g., `[Algorithm]_[RollNo]_[Name]`). 
 
 ## How to Run
 Since these are independent projects developed by different students, the exact technology stack and execution steps might vary. 
