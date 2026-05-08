@@ -156,7 +156,7 @@ DECREASE-KEY(Q, v, v.d)
 ---
 
 ## Project Structure
-Dijkstra_Algorithm_Gayatri_D7B01/
+Dijkstra_01_Gayatri_Agarwal/
 ├── dijkstra_virtual_lab.html # Main application (HTML/CSS/JS)
 └── README.md # This files
 
