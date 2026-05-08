@@ -104,20 +104,23 @@ Dijkstra’s algorithm is a **greedy** algorithm that maintains a set of vertice
 4. **Mark visited** – the extracted node is now final (its distance cannot be improved because all edge weights are non‑negative).
 5. **Repeat** until all reachable nodes are visited.
 
-### Pseudocode
+## Pseudocode
+
+```
 DIJKSTRA(G, w, s):
-for each vertex v in G.V:
-v.d = ∞
-v.parent = NIL
-s.d = 0
-Q = min-priority queue of all vertices keyed by .d
-while Q ≠ ∅:
-u = EXTRACT-MIN(Q)
-for each vertex v in G.Adj[u]:
-if v.d > u.d + w(u, v):
-v.d = u.d + w(u, v)
-v.parent = u
-DECREASE-KEY(Q, v, v.d)
+  for each vertex v in G.V:
+    v.d = ∞
+    v.parent = NIL
+  s.d = 0
+  Q = min-priority queue of all vertices keyed by .d
+  while Q ≠ ∅:
+    u = EXTRACT-MIN(Q)
+    for each vertex v in G.Adj[u]:
+      if v.d > u.d + w(u, v):
+        v.d = u.d + w(u, v)
+        v.parent = u
+        DECREASE-KEY(Q, v, v.d)
+```
 
 ---
 
@@ -167,9 +170,9 @@ Dijkstra_01_Gayatri_Agarwal/
 
 ## Author
 
-**Gayatri** (D7B_01)  
+**Gayatri Agarwal** (D7B_01)  
 Course – Design and Analysis of Algorithms (DAA)  
-Date – April 2026
+April 2026
 
 ---
 
