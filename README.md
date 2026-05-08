@@ -11,6 +11,7 @@ The repository includes implementations and visual simulations for the following
 * **Graph Coloring**
 * **Kruskal's Algorithm** (Minimum Spanning Tree)
 * **Longest Common Subsequence (LCS)** (Dynamic Programming)
+* **Dragon Problem** (Minimum Cost Path using Dynamic Programming)
 * **Selection Sort**
 
 ## Repository Structure
