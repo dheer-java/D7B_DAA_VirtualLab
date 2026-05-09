@@ -1,0 +1,61 @@
+# Kruskal Virtual Lab (Java Swing GUI)
+
+## Overview
+This project is a Virtual Lab implementation of **Kruskal’s Algorithm** used to find the **Minimum Spanning Tree (MST)** of a weighted graph.  
+The application is developed using **Java Swing** and provides an interactive graphical interface for understanding the working of the algorithm through visualization.
+
+The project allows users to:
+- Input vertices and weighted edges
+- Execute Kruskal’s Algorithm step-by-step
+- Visualize graph construction
+- Highlight MST edges
+- Display the final minimum cost
+
+---
+
+## Features
+- Interactive GUI using Java Swing
+- User input for vertices and edges
+- Graph visualization with nodes and edges
+- Step-by-step execution of Kruskal’s Algorithm
+- MST edge highlighting
+- Display of total minimum cost
+- Reset and sample input functionality
+
+---
+
+## Technologies Used
+- Java
+- Java Swing
+- AWT Graphics
+- ArrayList
+- Disjoint Set (Union-Find)
+
+---
+
+## How the Project Works
+
+### Input Stage
+The user enters:
+- Number of vertices
+- Source vertex
+- Destination vertex
+- Weight of edge
+
+### Processing Stage
+- Edges are sorted in increasing order
+- Kruskal’s Algorithm selects edges one by one
+- Disjoint Set is used to detect cycles
+
+### Output Stage
+- MST edges are selected and highlighted
+- Final minimum cost is displayed
+- Graph visualization is updated dynamically
+
+---
+
+## How to Run
+
+### Compile
+```bash
+javac KruskalGraphVirtualLab.java
